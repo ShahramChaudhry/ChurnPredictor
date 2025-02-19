@@ -1,4 +1,5 @@
 # 🔹 Ignore Python virtual environments
+backend/venv/
 venv/
 .env
 __pycache__/
@@ -10,6 +11,7 @@ __pycache__/
 
 # 🔹 Ignore Node.js dependencies (frontend & backend)
 node_modules/
+frontend/node_modules/
 *.log
 .yarn/
 .npm/
