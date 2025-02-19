@@ -29,7 +29,7 @@ function App() {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post("http://127.0.0.1:5000/predict", formData);
+      const response = await axios.post("https://churnpredictor-n2te.onrender.com/predict", formData);
       setPrediction(response.data);
     } catch (error) {
       console.error("Error:", error);
