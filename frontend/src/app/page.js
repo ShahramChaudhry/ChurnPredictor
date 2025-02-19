@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://churnpredictor-n2te.onrender.com";
+
 function App() {
   const initialFormData = {
     SeniorCitizen: 0, Partner: 0, Dependents: 0, tenure: 0,
@@ -29,7 +31,7 @@ function App() {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post("https://churnpredictor-n2te.onrender.com/predict", formData);
+      const response = await axios.post(`${API_URL}/predict`, formData);
       setPrediction(response.data);
     } catch (error) {
       console.error("Error:", error);
@@ -38,73 +40,88 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
-      <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-2xl">
-        <h2 className="text-2xl font-bold text-center text-blue-600 mb-4">Churn Prediction App</h2>
-        
-        <form onSubmit={handleSubmit} className="space-y-4">
+    <div style={{
+      minHeight: "100vh",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: "#ffffff", // White background
+      padding: "20px"
+    }}>
+      <div style={{
+        backgroundColor: "#f9f9f9",
+        padding: "30px",
+        borderRadius: "10px",
+        boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
+        width: "100%",
+        maxWidth: "450px", // Keeps everything inside
+        textAlign: "center"
+      }}>
+        <h2 style={{ fontSize: "22px", fontWeight: "bold", color: "#333", marginBottom: "15px" }}>
+          Churn Prediction App
+        </h2>
+
+        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
           {/* Senior Citizen, Partner, Dependents */}
-          <div className="grid grid-cols-3 gap-4">
-            <label className="block">
-              <span className="text-gray-700">Senior Citizen</span>
-              <select name="SeniorCitizen" value={formData.SeniorCitizen} onChange={handleChange} className="block w-full mt-1 p-2 border rounded-md text-black">
-                <option value="0">No</option>
-                <option value="1">Yes</option>
-              </select>
-            </label>
-
-            <label className="block">
-              <span className="text-gray-700">Partner</span>
-              <select name="Partner" value={formData.Partner} onChange={handleChange} className="block w-full mt-1 p-2 border rounded-md text-black">
-                <option value="0">No</option>
-                <option value="1">Yes</option>
-              </select>
-            </label>
-
-            <label className="block">
-              <span className="text-gray-700">Dependents</span>
-              <select name="Dependents" value={formData.Dependents} onChange={handleChange} className="block w-full mt-1 p-2 border rounded-md text-black">
-                <option value="0">No</option>
-                <option value="1">Yes</option>
-              </select>
-            </label>
+          <div style={{ display: "flex", gap: "10px" }}>
+            {["SeniorCitizen", "Partner", "Dependents"].map((field) => (
+              <label key={field} style={{ flex: "1", textAlign: "left", fontSize: "14px", color: "#333" }}>
+                {field.replace(/([A-Z])/g, " $1")}
+                <select name={field} value={formData[field]} onChange={handleChange} 
+                        style={{ width: "100%", padding: "8px", borderRadius: "5px", border: "1px solid #ccc" }}>
+                  <option value="0">No</option>
+                  <option value="1">Yes</option>
+                </select>
+              </label>
+            ))}
           </div>
 
           {/* Tenure, Monthly Charges, Total Charges */}
-          <div className="grid grid-cols-3 gap-4">
-            <label className="block">
-              <span className="text-gray-700">Tenure (Months)</span>
-              <input type="number" name="tenure" value={formData.tenure} onChange={handleChange} className="block w-full mt-1 p-2 border rounded-md text-black" />
-            </label>
-
-            <label className="block">
-              <span className="text-gray-700">Monthly Charges</span>
-              <input type="number" name="MonthlyCharges" value={formData.MonthlyCharges} onChange={handleChange} className="block w-full mt-1 p-2 border rounded-md text-black" />
-            </label>
-
-            <label className="block">
-              <span className="text-gray-700">Total Charges</span>
-              <input type="number" name="TotalCharges" value={formData.TotalCharges} onChange={handleChange} className="block w-full mt-1 p-2 border rounded-md text-black" />
-            </label>
+          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+            {["tenure", "MonthlyCharges", "TotalCharges"].map((field) => (
+              <label key={field} style={{ textAlign: "left", fontSize: "14px", color: "#333" }}>
+                {field.replace(/([A-Z])/g, " $1")}
+                <input type="number" name={field} value={formData[field]} onChange={handleChange} 
+                       style={{ width: "100%", padding: "8px", borderRadius: "5px", border: "1px solid #ccc" }} />
+              </label>
+            ))}
           </div>
 
           {/* Submit Button */}
-          <div className="flex justify-center">
-            <button type="submit" disabled={loading} className="bg-blue-500 text-white font-semibold px-6 py-2 rounded-md hover:bg-blue-600 transition">
-              {loading ? "Predicting..." : "Predict Churn"}
-            </button>
-          </div>
+          <button type="submit" disabled={loading} 
+                  style={{
+                    backgroundColor: "#007bff",
+                    color: "#ffffff",
+                    padding: "12px",
+                    borderRadius: "5px",
+                    fontSize: "16px",
+                    cursor: "pointer",
+                    border: "none",
+                    fontWeight: "bold",
+                    width: "100%"
+                  }}>
+            {loading ? "Predicting..." : "🔮 Predict Churn"}
+          </button>
         </form>
 
         {/* Prediction Output */}
         {prediction && (
-          <div className="mt-6 text-center bg-gray-100 p-4 rounded-lg">
-            <p className="text-lg font-semibold">Churn Prediction: 
-              <span className={prediction.churn_prediction ? "text-red-600" : "text-green-600"}>
-                {prediction.churn_prediction ? " Yes" : " No"}
+          <div style={{
+            marginTop: "20px",
+            padding: "15px",
+            backgroundColor: "#e9ecef",
+            borderRadius: "5px",
+            fontSize: "16px"
+          }}>
+            <p style={{ fontWeight: "bold", color: "#333" }}>
+              Churn Prediction: 
+              <span style={{ color: prediction.churn_prediction ? "red" : "green", marginLeft: "5px" }}>
+                {prediction.churn_prediction ? "Yes" : "No"}
               </span>
             </p>
-            <p className="text-lg font-semibold">Probability: <span className="text-blue-600">{(prediction.churn_probability * 100).toFixed(2)}%</span></p>
+            <p style={{ fontWeight: "bold", color: "#007bff" }}>
+              Probability: {(prediction.churn_probability * 100).toFixed(2)}%
+            </p>
           </div>
         )}
       </div>
