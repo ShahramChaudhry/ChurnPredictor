@@ -1,0 +1,40 @@
+# 🔹 Ignore Python virtual environments
+venv/
+.env
+__pycache__/
+*.pyc
+*.pyo
+
+# 🔹 Ignore Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# 🔹 Ignore Node.js dependencies (frontend & backend)
+node_modules/
+*.log
+.yarn/
+.npm/
+.pnpm-store/
+
+# 🔹 Ignore build files
+/build
+/dist
+.next/
+
+# 🔹 Ignore environment and config files
+.env.local
+.env.development
+.env.production
+
+# 🔹 Ignore macOS system files
+.DS_Store
+
+# 🔹 Ignore VSCode settings (optional)
+.vscode/
+
+# 🔹 Ignore other OS-generated files
+Thumbs.db
+
+# 🔹 Ignore nested Git repositories (Fixes your issue)
+frontend/.git
+backend/.git
+backend/api/churn-predictor/.git
